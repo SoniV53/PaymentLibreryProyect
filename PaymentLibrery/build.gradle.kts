@@ -1,7 +1,7 @@
 plugins {
     id("com.android.library")
     id ("kotlin-android")
-    id("maven-publish")
+    `maven-publish`
 }
 
 group = "com.github.jitpack"
