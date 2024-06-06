@@ -1,7 +1,7 @@
 plugins {
     id("com.android.library")
-    id ("kotlin-android")
-    `maven-publish`
+    id("org.jetbrains.kotlin.android")
+    id("maven-publish")
 }
 
 group = "com.github.jitpack"
@@ -48,7 +48,10 @@ afterEvaluate {
                 from(components["release"])
                 groupId = "com.github.SoniV53"
                 artifactId = "PaymentLibreryProyect"
-                version = "1.0.1"
+                version = "1.1.1"
+            }
+            repositories {
+                mavenLocal()
             }
         }
     }
