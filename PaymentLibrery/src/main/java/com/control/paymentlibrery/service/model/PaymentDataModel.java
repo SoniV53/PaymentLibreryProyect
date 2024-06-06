@@ -21,8 +21,8 @@ public class PaymentDataModel {
     private int quote;
     @SerializedName("amountQuote")
     private double amountQuote;
-    @ColumnInfo(name = "quoteStart")
-    public int quoteStart;
+    @SerializedName("quoteStart")
+    private int quoteStart;
 
     public PaymentDataModel() {
     }
@@ -35,6 +35,17 @@ public class PaymentDataModel {
         this.type = type;
         this.quote = quote;
         this.amountQuote = amountQuote;
+    }
+
+    public PaymentDataModel( String title, String description, String category, double amount, String type, int quote, double amountQuote, int quoteStart) {
+        this.title = title;
+        this.description = description;
+        this.category = category;
+        this.amount = amount;
+        this.type = type;
+        this.quote = quote;
+        this.amountQuote = amountQuote;
+        this.quoteStart = quoteStart;
     }
 
     public int getId() {
