@@ -27,8 +27,8 @@ public class PaymentEntity {
     @ColumnInfo(name = "amountQuote")
     public double amountQuote;
 
-    @ColumnInfo(name = "amountPaid")
-    public double amountPaid;
+    @ColumnInfo(name = "quoteStart")
+    public int quoteStart;
 
 
 }

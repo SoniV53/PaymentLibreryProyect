@@ -11,6 +11,7 @@ import com.control.paymentlibrery.service.model.AmountMonthDataModel;
 import com.control.paymentlibrery.service.model.MonthDataModel;
 import com.control.paymentlibrery.service.model.YearDataModel;
 import com.control.paymentlibrery.service.model.list.MonthDataList;
+import com.control.paymentlibrery.service.model.list.YearDataList;
 import com.control.paymentlibrery.service.model.with.MonthDataAndYearData;
 
 import java.util.Calendar;
@@ -78,5 +79,11 @@ public class YearAndMonthController extends BaseController {
         MonthRepository repositoryMonths = new MonthRepository(dataBaseRoom);
         MonthDataList monthList = responseJson(repositoryMonths.getListRoom().getResponse(),MonthDataList.class);
         return monthList;
+    }
+
+    public YearDataList getYears() {
+        YearRepository repository = new YearRepository(dataBaseRoom);
+        YearDataList list = responseJson(repository.getListRoom().getResponse(),YearDataList.class);
+        return list;
     }
 }

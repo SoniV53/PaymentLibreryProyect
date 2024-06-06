@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primaryDarkBlack">#252525</color>
+    <color name="secondDarkBlack">#100E0E</color>
+    <color name="threeDarkBlack">#414143</color>
+    <color name="primaryDarkBlue">#333440</color>
+    <color name="primaryBlue">#454C73</color>
+    <color name="primaryGray">#CCD0D9</color>
+    <color name="primaryDarkGray">#5A5A5A</color>
+    <color name="primaryGreen">#3EA34E</color>
+    <color name="secondGreen">#237830</color>
+    <color name="primaryRed">#A8241B</color>
+    <color name="secondRed">#D32D22</color>
+
+    <color name="white">#FFFFFFFF</color>
+</resources>

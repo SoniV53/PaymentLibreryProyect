@@ -16,7 +16,8 @@ import com.control.paymentlibrery.database.entity.PaymentEntity;
 import com.control.paymentlibrery.database.entity.SubPaymentEntity;
 import com.control.paymentlibrery.database.entity.YearEntity;
 
-@Database(entities = {YearEntity.class, MonthEntity.class, PaymentEntity.class, MonthPaymentEntity.class, SubPaymentEntity.class, AmountMonthEntity.class}, version = 5)
+@Database(entities = {YearEntity.class, MonthEntity.class, PaymentEntity.class, MonthPaymentEntity.class, SubPaymentEntity.class, AmountMonthEntity.class},
+        version = 6)
 public abstract class DataBaseRoom extends RoomDatabase {
     public abstract YearDao yearDao();
     public abstract MonthDao monthDao();

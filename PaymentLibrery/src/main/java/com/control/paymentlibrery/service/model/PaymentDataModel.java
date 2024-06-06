@@ -1,5 +1,7 @@
 package com.control.paymentlibrery.service.model;
 
+import androidx.room.ColumnInfo;
+
 import com.google.gson.annotations.SerializedName;
 
 public class PaymentDataModel {
@@ -19,8 +21,8 @@ public class PaymentDataModel {
     private int quote;
     @SerializedName("amountQuote")
     private double amountQuote;
-    @SerializedName("amountPaid")
-    private double amountPaid;
+    @ColumnInfo(name = "quoteStart")
+    public int quoteStart;
 
     public PaymentDataModel() {
     }
@@ -99,11 +101,11 @@ public class PaymentDataModel {
         this.amountQuote = amountQuote;
     }
 
-    public double getAmountPaid() {
-        return amountPaid;
+    public int getQuoteStart() {
+        return quoteStart;
     }
 
-    public void setAmountPaid(double amountPaid) {
-        this.amountPaid = amountPaid;
+    public void setQuoteStart(int quoteStart) {
+        this.quoteStart = quoteStart;
     }
 }

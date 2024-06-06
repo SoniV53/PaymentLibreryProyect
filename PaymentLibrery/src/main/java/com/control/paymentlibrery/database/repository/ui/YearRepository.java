@@ -3,6 +3,7 @@ package com.control.paymentlibrery.database.repository.ui;
 import com.control.paymentlibrery.database.DataBaseRoom;
 import com.control.paymentlibrery.database.dao.YearDao;
 import com.control.paymentlibrery.database.entity.YearEntity;
+import com.control.paymentlibrery.database.entity.list.YearList;
 import com.control.paymentlibrery.database.repository.BaseRepository;
 import com.control.paymentlibrery.database.repository.BaseResponse;
 import com.control.paymentlibrery.database.repository.InterfaceCRUD;
@@ -64,7 +65,7 @@ public class YearRepository extends BaseRepository implements InterfaceCRUD {
             return new BaseResponse(
                     "Success",
                     CODE200,
-                    gson.toJson(yearEntities)
+                    gson.toJson(new YearList(yearEntities))
             );
         }catch (Exception e){
             return new BaseResponse(e.getMessage());

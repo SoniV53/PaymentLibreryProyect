@@ -123,7 +123,7 @@ public class PaymentsController extends BaseController {
 
             if (paymentDataMonthExist == null){
                 PaymentDataMonthModel requestPayment = new PaymentDataMonthModel(idAmountMonth,item.getId());
-                requestPayment.setQuotesPay(quotesExist(respPaymentMonth.getDataList(),paymentDataMonthExist));
+                requestPayment.setQuotesPay(quotesExist(respPaymentMonth.getDataList(),paymentDataMonthExist,item.getQuoteStart()));
                 requestPayment.setAmountPaid(0.0);
                 requestPayment.setStatus("false");
                 repositoryMonths.createOrUpdateRoomPayment(gson.toJson(requestPayment));
@@ -133,17 +133,19 @@ public class PaymentsController extends BaseController {
         return new BaseResponse("Se creo Corretamente","200");
     }
 
-    private String quotesExist( List<PaymentDataMonthModel> getDataList,PaymentDataMonthModel paymentDataMonthExist){
+    private String quotesExist( List<PaymentDataMonthModel> getDataList,PaymentDataMonthModel paymentDataMonthExist, int quoteStart){
         if (paymentDataMonthExist == null){
-            int quoteM = 0;
+            int quoteM = quoteStart;
+            boolean isExist = false;
             if (getDataList != null){
                 for (PaymentDataMonthModel itemRe:getDataList) {
                     int quote = !itemRe.getQuotesPay().isEmpty() ? Integer.parseInt(itemRe.getQuotesPay()) : 0;
                     if (quote > quoteM)
                         quoteM = quote;
                 }
+                isExist = getDataList.size() > 0;
             }
-            return String.valueOf((quoteM + 1));
+            return String.valueOf(isExist ? (quoteM + 1) : quoteStart);
         }else return "0";
     }
 
