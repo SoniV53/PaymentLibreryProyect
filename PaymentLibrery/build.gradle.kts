@@ -60,7 +60,7 @@ afterEvaluate {
                 from(components["release"])
                 groupId = "com.github.SoniV53"
                 artifactId = "PaymentLibreryProyect"
-                version = "1.2.0"
+                version = "1.2.1"
             }
             repositories {
                 mavenLocal()
