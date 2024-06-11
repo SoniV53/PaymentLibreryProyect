@@ -96,6 +96,9 @@ public class PaymentsController extends BaseController {
             PaymentRepository repository = new PaymentRepository(dataBaseRoom);
             PaymentMonthRepository repositoryMonths = new PaymentMonthRepository(dataBaseRoom);
 
+            if (requestMonth.getQuotesPay() != null && !requestMonth.getQuotesPay().isEmpty())
+                requestPayment.setQuoteStart(Integer.parseInt(requestMonth.getQuotesPay()));
+
             boolean typeCategory = requestPayment.getCategory().equals("M");
 
             if (typeCategory){
