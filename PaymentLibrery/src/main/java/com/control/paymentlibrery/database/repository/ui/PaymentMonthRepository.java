@@ -198,13 +198,13 @@ public class PaymentMonthRepository extends BaseRepository implements InterfaceC
         }
     }
 
-    public BaseResponse getListRoomYearAndMonth(int idMonth,int idPayment) {
+    public BaseResponse getListRoomYearAndMonth(int idAmountMonth,int idPayment) {
         try {
-            MonthPaymentEntity list = dao.findByIdMonthAndIdPayment(idMonth,idPayment);
+            MonthPaymentEntity data = dao.findByIdMonthAndIdPayment(idAmountMonth,idPayment);
             return new BaseResponse(
                     "Success",
                     CODE200,
-                    gson.toJson(list)
+                    gson.toJson(data)
             );
         }catch (Exception e){
             return new BaseResponse(e.getMessage());

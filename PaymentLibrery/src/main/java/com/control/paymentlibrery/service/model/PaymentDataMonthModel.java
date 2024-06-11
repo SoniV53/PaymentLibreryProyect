@@ -25,13 +25,6 @@ public class PaymentDataMonthModel {
         this.idPayment = idPayment;
     }
 
-    public PaymentDataMonthModel(double amountPaid, String status, String quotesPay,List<SubPaymentDataMonthModel> subPaymentDataMonthModels) {
-        this.amountPaid = amountPaid;
-        this.status = status;
-        this.quotesPay = quotesPay;
-        this.subPaymentDataMonthModels = subPaymentDataMonthModels;
-    }
-
     public PaymentDataMonthModel(double amountPaid, String status, String quotesPay, int idAmountMonth, List<SubPaymentDataMonthModel> subPaymentDataMonthModels) {
         this.amountPaid = amountPaid;
         this.status = status;

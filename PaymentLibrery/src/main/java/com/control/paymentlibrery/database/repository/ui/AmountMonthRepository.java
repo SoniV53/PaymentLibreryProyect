@@ -94,4 +94,17 @@ public class AmountMonthRepository extends BaseRepository implements InterfaceCR
             return new BaseResponse(e.getMessage());
         }
     }
+
+    public BaseResponse getListRoomYearAndMonth(int id) {
+        try {
+            AmountMonthEntity entityMonth = dao.findById(id);
+            return new BaseResponse(
+                    "Success",
+                    CODE200,
+                    gson.toJson(entityMonth)
+            );
+        }catch (Exception e){
+            return new BaseResponse(e.getMessage());
+        }
+    }
 }

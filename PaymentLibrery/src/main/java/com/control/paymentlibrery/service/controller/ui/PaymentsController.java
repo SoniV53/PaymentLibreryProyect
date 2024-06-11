@@ -89,6 +89,69 @@ public class PaymentsController extends BaseController {
 
     }
 
+    //Servicio Para crear Un gasto de tipo Mensual o unico
+    public BaseResponse createNewPayment(PaymentDataModel requestPayment,PaymentDataMonthModel requestMonth) {
+        try {
+            //repository connect
+            PaymentRepository repository = new PaymentRepository(dataBaseRoom);
+            PaymentMonthRepository repositoryMonths = new PaymentMonthRepository(dataBaseRoom);
+
+            boolean typeCategory = requestPayment.getCategory().equals("M");
+
+            if (typeCategory){
+                PaymentDataModel detailsPayment = responseJson(repository.getPaymentTitleCategory(requestPayment.getTitle(),"M").getResponse(),PaymentDataModel.class);
+                return createValidData(detailsPayment,requestPayment,requestMonth,repositoryMonths,"M");
+            }else {
+                PaymentDataList detailsPaymentList = responseJson(repository.getPaymentTitleCategoryList(requestPayment.getTitle(),"U").getResponse(),PaymentDataList.class);
+                PaymentDataModel detailsPayment = null;
+
+                if (detailsPaymentList != null && detailsPaymentList.getDataList() != null){
+                    for (PaymentDataModel paymentDataModel:detailsPaymentList.getDataList()) {
+                        PaymentDataMonthModel responseSe = responseJson(repositoryMonths.getListRoomYearAndMonth(requestMonth.getIdAmountMonth(),paymentDataModel.getId()).getResponse(), PaymentDataMonthModel.class);
+                        if (responseSe != null){
+                            detailsPayment = paymentDataModel;
+                            break;
+                        }
+                    }
+                }
+
+                return createValidData(detailsPayment,requestPayment,requestMonth,repositoryMonths,"U");
+            }
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    //Metodo valida y crea segun si ya existe en el mes este gasto puede tener dos con el mismo nombre pero no de la misma categoria
+    private BaseResponse createValidData(PaymentDataModel detailsPayment,PaymentDataModel requestPayment,PaymentDataMonthModel requestMonth,PaymentMonthRepository repositoryMonths,String category) throws Exception{
+        AmountMonthRepository repository = new AmountMonthRepository(dataBaseRoom);
+        AmountMonthDataModel amountM = responseJson(repository.getListRoomYearAndMonth(requestMonth.getIdAmountMonth()).getResponse(),AmountMonthDataModel.class);
+
+        if (amountM != null){
+            if (detailsPayment == null){
+                //crea valores iniciales para pago si no existe pago
+                PaymentDataModel paymentResponse = getCreatePayment(requestPayment);
+                createPayment(paymentResponse,requestMonth,repositoryMonths);
+                return new BaseResponse("Creado Exitosamente","200");
+            }else {
+                PaymentDataMonthModel responseSe = responseJson(repositoryMonths.getListRoomYearAndMonth(requestMonth.getIdAmountMonth(),detailsPayment.getId()).getResponse(), PaymentDataMonthModel.class);
+                responseSe = responseSe != null && detailsPayment.getCategory().equals(category) ? responseSe : null;
+                if (responseSe == null){
+                    //crea valores iniciales para pago si no existe pago
+                    PaymentDataModel paymentResponse = getCreatePayment(requestPayment);
+                    createPayment(paymentResponse,requestMonth,repositoryMonths);
+                    return new BaseResponse("Creado Exitosamente","200");
+                }
+            }
+            return new BaseResponse("Error: Gasto Existente","400");
+        }else {
+            return new BaseResponse("Error: ID de Estimación Incorrecta","400");
+        }
+    }
+
+    //Metodo para crear un gasto segun el mes recopilando, el id del gasto creado recientemente
     private void createPayment(PaymentDataModel paymentResponse,PaymentDataMonthModel requestMonth,PaymentMonthRepository repositoryMonths){
         if (paymentResponse != null){
             requestMonth.setIdPayment(paymentResponse.getId());
@@ -164,12 +227,14 @@ public class PaymentsController extends BaseController {
         PaymentDataMonthModel response = responseJson(base.getResponse(),PaymentDataMonthModel.class);
         return response;
     }
-    public List<PaymentMonthDataAndPaymentData> getPaymentMonthsResponse(int idMonth) {
+
+    //Servicio que trae todos los gastos del mes
+    public List<PaymentMonthDataAndPaymentData> getPaymentMonthsResponse(int idMonthSt) {
         List<PaymentMonthDataAndPaymentData> responses = new ArrayList<>();
         PaymentMonthRepository repositoryMonths = new PaymentMonthRepository(dataBaseRoom);
 
         try {
-            PaymentDataMonthList respPaymentMonth = responseJson(repositoryMonths.getListRoomSelectMonth(idMonth).getResponse(), PaymentDataMonthList.class);
+            PaymentDataMonthList respPaymentMonth = responseJson(repositoryMonths.getListRoomSelectMonth(idMonthSt).getResponse(), PaymentDataMonthList.class);
             if (respPaymentMonth != null){
                 PaymentRepository repositoryPayment = new PaymentRepository(dataBaseRoom);
 
