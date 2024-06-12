@@ -140,8 +140,14 @@ public class PaymentsController extends BaseController {
             if (requestMonth != null)
                 repositoryMonths.createOrUpdateRoom(printJson(requestMonth));
             return new BaseResponse("Actualizado Exitosamente","200");
+        }else if (detailsTitle == null){
+            getCreatePayment(requestPayment);
+            if (requestMonth != null)
+                repositoryMonths.createOrUpdateRoom(printJson(requestMonth));
+            return new BaseResponse("Actualizado Exitosamente","200");
         }else
             return new BaseResponse("Error: Gasto Existente",titleExist,"400","");
+
     }
 
     //Servicio Para crear un gasto de tipo Mensual o unico
@@ -251,7 +257,7 @@ public class PaymentsController extends BaseController {
                 requestPayment.setQuotesPay(quotesExist(respPaymentMonth.getDataList(),paymentDataMonthExist,item.getQuoteStart()));
                 requestPayment.setAmountPaid(0.0);
                 requestPayment.setStatus("false");
-                if (parseInger(item.getType()) > 1 && (requestPayment != null && item.getQuote() > parseInger(requestPayment.getQuotesPay())))
+                if (parseInger(item.getType()) > 1 && (requestPayment != null && item.getQuote() >= parseInger(requestPayment.getQuotesPay())))
                     repositoryMonths.createOrUpdateRoomPayment(gson.toJson(requestPayment));
                 else if (parseInger(item.getType()) == 1)
                     repositoryMonths.createOrUpdateRoomPayment(gson.toJson(requestPayment));
