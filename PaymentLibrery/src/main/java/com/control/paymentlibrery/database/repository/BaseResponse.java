@@ -2,6 +2,7 @@ package com.control.paymentlibrery.database.repository;
 
 public class BaseResponse {
     private String message;
+    private String title;
     private String code;
     private String response;
 
@@ -17,6 +18,13 @@ public class BaseResponse {
 
     public BaseResponse(String message, String code, String response) {
         this.message = message;
+        this.code = code;
+        this.response = response;
+    }
+
+    public BaseResponse(String title,String message,String code, String response) {
+        this.message = message;
+        this.title = title;
         this.code = code;
         this.response = response;
     }
@@ -48,5 +56,13 @@ public class BaseResponse {
 
     public void setResponse(String response) {
         this.response = response;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 }

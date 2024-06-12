@@ -134,6 +134,19 @@ public class PaymentRepository extends BaseRepository implements InterfaceCRUD {
         }
     }
 
+    public BaseResponse getPaymentIDCategory(int id,String category) {
+        try {
+            PaymentEntity payment = dao.findByIdAndCategory(id,category);
+            return new BaseResponse(
+                    "Success",
+                    CODE200,
+                    gson.toJson(payment)
+            );
+        }catch (Exception e){
+            return new BaseResponse(e.getMessage());
+        }
+    }
+
     public BaseResponse getPaymentTitleCategoryList(String title,String category) {
         try {
             List<PaymentEntity> payment = dao.findByTitleAndCategoryList(title,category);

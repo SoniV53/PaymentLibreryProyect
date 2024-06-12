@@ -26,4 +26,8 @@ public class BaseController {
     protected <T>T responseJson(String decrypted,Class<T> clazz){
         return gson.fromJson(decrypted, clazz);
     }
+
+    protected int parseInger(String value){
+        return value != null && !value.isEmpty() ? Integer.parseInt(value) : 0;
+    }
 }

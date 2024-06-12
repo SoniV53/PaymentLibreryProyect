@@ -45,9 +45,9 @@ public class MainActivity extends AppCompatActivity {
         System.out.println("GASTOS DATA: " + gson.toJson(pas.getPaymentMonthsResponse(st)));
 
         binding.button.setOnClickListener(view -> {
-            BaseResponse response = pas.createNewPayment(
-                    new PaymentDataModel("sat","","M",200,"1",1,0,1),
-                    new PaymentDataMonthModel(200,"false","",st,new ArrayList<>()));
+            BaseResponse response = pas.updatePayment(
+                    new PaymentDataModel(1,"sat","","M",200,"1",1,0,1),
+                    new PaymentDataMonthModel(3,3,"false","1",1,st));
 
             System.out.println("RESONSE DATA: " + gson.toJson(response));
             Toast.makeText(this, gson.toJson(response), Toast.LENGTH_SHORT).show();

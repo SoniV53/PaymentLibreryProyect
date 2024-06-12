@@ -21,6 +21,7 @@ import java.util.List;
 
 public class PaymentsController extends BaseController {
 
+    private String titleExist = "¡Ups! Parece que este gasto ya existe.\\nPor favor, intenta con otro título.";
     public PaymentsController(Context context) {
         super(context);
     }
@@ -89,7 +90,61 @@ public class PaymentsController extends BaseController {
 
     }
 
-    //Servicio Para crear Un gasto de tipo Mensual o unico
+    //Servicio Para actualizar un gasto de tipo Mensual o unico
+    public BaseResponse updatePayment(PaymentDataModel requestPayment,PaymentDataMonthModel requestMonth) {
+        try {
+            //repository connect
+            PaymentRepository repository = new PaymentRepository(dataBaseRoom);
+            PaymentMonthRepository repositoryMonths = new PaymentMonthRepository(dataBaseRoom);
+
+            boolean typeCategory = requestPayment.getCategory().equals("M");
+
+            if (typeCategory){
+                PaymentDataModel detailsPayment = responseJson(repository.getPaymentIDCategory(requestPayment.getId(),"M").getResponse(),PaymentDataModel.class);
+                if (detailsPayment != null){
+                    PaymentDataModel detailsTitle = responseJson(repository.getPaymentTitleCategory(requestPayment.getTitle(),"M").getResponse(),PaymentDataModel.class);
+                    return updateValid(detailsTitle,detailsPayment,requestPayment,requestMonth,repositoryMonths);
+                }
+            }else {
+                PaymentDataModel detailsPayment = responseJson(repository.getPaymentIDCategory(requestPayment.getId(),"U").getResponse(),PaymentDataModel.class);
+                if (detailsPayment != null){
+                    PaymentDataList detailsPaymentList = responseJson(repository.getPaymentTitleCategoryList(requestPayment.getTitle(),"U").getResponse(),PaymentDataList.class);
+                    PaymentDataModel detailsTitle = null;
+
+                    if (detailsPaymentList != null && detailsPaymentList.getDataList() != null){
+                        for (PaymentDataModel paymentDataModel:detailsPaymentList.getDataList()) {
+                            PaymentDataMonthModel responseSe = responseJson(repositoryMonths.getListRoomYearAndMonth(requestMonth.getIdAmountMonth(),paymentDataModel.getId()).getResponse(), PaymentDataMonthModel.class);
+                            if (responseSe != null){
+                                detailsTitle = paymentDataModel;
+                                break;
+                            }
+                        }
+                    }
+
+                    return updateValid(detailsTitle,detailsPayment,requestPayment,requestMonth,repositoryMonths);
+                }
+            }
+            return new BaseResponse("Error: Datos Incorrectos","Datos Incorrectos, no se encontro información","400","");
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    private BaseResponse updateValid( PaymentDataModel detailsTitle,PaymentDataModel detailsPayment,PaymentDataModel requestPayment,PaymentDataMonthModel requestMonth,PaymentMonthRepository repositoryMonths) throws Exception {
+        if (parseInger(requestPayment.getType()) > 1 && (requestMonth != null && requestPayment.getQuote() < parseInger(requestMonth.getQuotesPay()))){
+            return new BaseResponse("Error: Cuota","Cuota General no puede ser menor a Cuota a pagar","400","");
+        }
+        if (detailsTitle != null && detailsTitle.getId() == detailsPayment.getId()){
+            getCreatePayment(requestPayment);
+            if (requestMonth != null)
+                repositoryMonths.createOrUpdateRoom(printJson(requestMonth));
+            return new BaseResponse("Actualizado Exitosamente","200");
+        }else
+            return new BaseResponse("Error: Gasto Existente",titleExist,"400","");
+    }
+
+    //Servicio Para crear un gasto de tipo Mensual o unico
     public BaseResponse createNewPayment(PaymentDataModel requestPayment,PaymentDataMonthModel requestMonth) {
         try {
             //repository connect
@@ -132,6 +187,10 @@ public class PaymentsController extends BaseController {
         AmountMonthRepository repository = new AmountMonthRepository(dataBaseRoom);
         AmountMonthDataModel amountM = responseJson(repository.getListRoomYearAndMonth(requestMonth.getIdAmountMonth()).getResponse(),AmountMonthDataModel.class);
 
+        if (parseInger(requestPayment.getType()) > 1 && (requestMonth != null && requestPayment.getQuote() < parseInger(requestMonth.getQuotesPay()))){
+            return new BaseResponse("Error: Cuota","Cuota General no puede ser menor a Cuota a pagar","400","");
+        }
+
         if (amountM != null){
             if (detailsPayment == null){
                 //crea valores iniciales para pago si no existe pago
@@ -148,9 +207,9 @@ public class PaymentsController extends BaseController {
                     return new BaseResponse("Creado Exitosamente","200");
                 }
             }
-            return new BaseResponse("Error: Gasto Existente","400");
+            return new BaseResponse("Error: Gasto Existente",titleExist,"400","");
         }else {
-            return new BaseResponse("Error: ID de Estimación Incorrecta","400");
+            return new BaseResponse("Error: ID de Estimación Incorrecta","ID de Estimación Incorrecta, ingrese una valida","400","");
         }
     }
 
@@ -192,7 +251,10 @@ public class PaymentsController extends BaseController {
                 requestPayment.setQuotesPay(quotesExist(respPaymentMonth.getDataList(),paymentDataMonthExist,item.getQuoteStart()));
                 requestPayment.setAmountPaid(0.0);
                 requestPayment.setStatus("false");
-                repositoryMonths.createOrUpdateRoomPayment(gson.toJson(requestPayment));
+                if (parseInger(item.getType()) > 1 && (requestPayment != null && item.getQuote() > parseInger(requestPayment.getQuotesPay())))
+                    repositoryMonths.createOrUpdateRoomPayment(gson.toJson(requestPayment));
+                else if (parseInger(item.getType()) == 1)
+                    repositoryMonths.createOrUpdateRoomPayment(gson.toJson(requestPayment));
             }
 
         });

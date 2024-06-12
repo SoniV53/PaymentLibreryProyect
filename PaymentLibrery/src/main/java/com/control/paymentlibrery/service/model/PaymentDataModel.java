@@ -48,6 +48,18 @@ public class PaymentDataModel {
         this.quoteStart = quoteStart;
     }
 
+    public PaymentDataModel(int id, String title, String description, String category, double amount, String type, int quote, double amountQuote, int quoteStart) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.category = category;
+        this.amount = amount;
+        this.type = type;
+        this.quote = quote;
+        this.amountQuote = amountQuote;
+        this.quoteStart = quoteStart;
+    }
+
     public int getId() {
         return id;
     }

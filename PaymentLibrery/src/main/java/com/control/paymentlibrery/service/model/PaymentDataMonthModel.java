@@ -33,6 +33,15 @@ public class PaymentDataMonthModel {
         this.subPaymentDataMonthModels = subPaymentDataMonthModels;
     }
 
+    public PaymentDataMonthModel(int id, double amountPaid, String status, String quotesPay, int idAmountMonth, int idPayment) {
+        this.id = id;
+        this.amountPaid = amountPaid;
+        this.status = status;
+        this.quotesPay = quotesPay;
+        this.idAmountMonth = idAmountMonth;
+        this.idPayment = idPayment;
+    }
+
     public List<SubPaymentDataMonthModel> getSubPaymentDataMonthModels() {
         return subPaymentDataMonthModels;
     }

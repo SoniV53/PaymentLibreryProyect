@@ -28,6 +28,10 @@ public interface PaymentDao {
     @Query("SELECT * FROM paymententity WHERE title LIKE :title AND category LIKE :category LIMIT 1")
     PaymentEntity findByTitleAndCategory(String title,String category);
 
+    @Query("SELECT * FROM paymententity WHERE id LIKE :id AND category LIKE :category LIMIT 1")
+    PaymentEntity findByIdAndCategory(int id,String category);
+
+
     @Query("SELECT * FROM paymententity WHERE title LIKE :title AND category LIKE :category")
     List<PaymentEntity> findByTitleAndCategoryList(String title,String category);
 
