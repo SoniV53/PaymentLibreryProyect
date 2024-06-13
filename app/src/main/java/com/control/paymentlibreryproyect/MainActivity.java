@@ -12,6 +12,7 @@ import com.control.paymentlibrery.service.controller.ui.YearAndMonthController;
 import com.control.paymentlibrery.service.model.AmountMonthDataModel;
 import com.control.paymentlibrery.service.model.PaymentDataModel;
 import com.control.paymentlibrery.service.model.PaymentDataMonthModel;
+import com.control.paymentlibrery.service.model.YearDataModel;
 import com.control.paymentlibrery.service.model.with.MonthDataAndYearData;
 import com.control.paymentlibreryproyect.databinding.ActivityMainBinding;
 import com.google.gson.Gson;
@@ -26,6 +27,21 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        RetrofitConect repository = RetrofitConect.getInstance(this);
+
+
+        binding.button.setOnClickListener(view -> {
+            repository.getYearAll().observe(this,yearDataModel -> {
+                System.out.println("RESPONSE DATA: " + new Gson().toJson(yearDataModel));
+            });
+        });
+
+        binding.button2.setOnClickListener(view -> {
+            repository.saveYear(new YearDataModel("2024")).observe(this, yearDataModel -> {
+                System.out.println("RESPONSE DATA: " + new Gson().toJson(yearDataModel));
+            });
+        });
     }
 
     private void dataDummy(){
